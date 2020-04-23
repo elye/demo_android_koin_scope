@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.getKoin
+import org.koin.android.scope.lifecycleScope
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
@@ -67,6 +68,12 @@ class MainActivity : AppCompatActivity() {
         txt_name_link_object_scope.setOnClickListener {
             createEnvironment(stringQualifiedScope.id, "scopedContainer")
         }
+        txt_activity_scope.setOnClickListener {
+            createEnvironment(lifecycleScope.id, "scopedActivity")
+        }
+        txt_activity_factory.setOnClickListener {
+            createEnvironment(lifecycleScope.id, "factoryActivity")
+        }
     }
 
     fun createEnvironment(scopeID: ScopeID, qualifierName: String) {
@@ -94,6 +101,10 @@ class MainActivity : AppCompatActivity() {
             typeQualifiedScope.get<Dependency>(qualifier = named("scopedName")).toString()
         txt_name_link_object_scope.text =
             stringQualifiedScope.get<Dependency>(qualifier = named("scopedContainer")).toString()
+        txt_activity_scope.text =
+            lifecycleScope.get<Dependency>(qualifier = named("scopedActivity")).toString()
+        txt_activity_factory.text =
+            lifecycleScope.get<Dependency>(qualifier = named("factoryActivity")).toString()
     }
 
     override fun onDestroy() {

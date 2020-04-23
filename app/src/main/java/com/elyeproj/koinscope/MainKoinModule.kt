@@ -18,9 +18,12 @@ val mainKoinModule =
 
         scope<Container> {
             scoped(qualifier = named("scopedContainer")) { Dependency() }
-            factory(qualifier = named("factoryContainer")) {
-                Dependency()
-            }
+            factory(qualifier = named("factoryContainer")) { Dependency() }
+        }
+
+        scope<MainActivity> {
+            scoped(qualifier = named("scopedActivity")) { Dependency() }
+            factory(qualifier = named("factoryActivity")) { Dependency() }
         }
 
         factory { (scopeId: ScopeID, name: String) ->
