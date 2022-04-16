@@ -5,13 +5,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.scope.ScopeActivity
+import org.koin.androidx.scope.activityRetainedScope
 import org.koin.core.annotation.KoinInternalApi
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.core.scope.ScopeID
 
-class MainActivity : ScopeActivity() {
+class MainActivity :ScopeActivity() {
+
+    private val activityRetainedScope : Scope by activityRetainedScope()
 
     private lateinit var container: Container
     private lateinit var typeQualifiedScope: Scope
@@ -74,6 +77,17 @@ class MainActivity : ScopeActivity() {
         txt_activity_factory.setOnClickListener {
             createEnvironment(scope.id, "factoryActivity")
         }
+        txt_retained_activity_scope.setOnClickListener {
+            createEnvironment(activityRetainedScope.id, "scopedActivity")
+        }
+        txt_retained_activity_factory.setOnClickListener {
+            createEnvironment(activityRetainedScope.id, "factoryActivity")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getValue()
     }
 
     fun createEnvironment(scopeID: ScopeID, qualifierName: String) {
@@ -105,6 +119,11 @@ class MainActivity : ScopeActivity() {
             scope.get<Dependency>(qualifier = named("scopedActivity")).toString()
         txt_activity_factory.text =
             scope.get<Dependency>(qualifier = named("factoryActivity")).toString()
+        txt_retained_activity_scope.text =
+            activityRetainedScope.get<Dependency>(qualifier = named("scopedActivity")).toString()
+        txt_retained_activity_factory.text =
+            activityRetainedScope.get<Dependency>(qualifier = named("factoryActivity")).toString()
+
     }
 
     override fun onDestroy() {
